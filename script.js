@@ -11,7 +11,6 @@ onload = () => {
   // 3. กำหนด Event Listener สำหรับการคลิกที่ปุ่ม
   const introMessage = document.getElementById('intro-message');
   introMessage.addEventListener('click', startAnimation);
-  // เพิ่ม listener สำหรับ Touch (กรณีใช้มือถือ)
   introMessage.addEventListener('touchstart', startAnimation); 
 };
 
@@ -27,30 +26,32 @@ function startAnimation() {
   // 2. ลบสถานะ 'not-bloomed' เพื่อเริ่มแอนิเมชันการบานของดอกไม้
   document.body.classList.remove('not-bloomed');
 
-  // 3. เพิ่มแอนิเมชันการบานกลับเข้าไปในองค์ประกอบใบไม้
-  // *เนื่องจากแอนิเมชันเดิมมีความซับซ้อนตามลำดับเวลา เราต้องใส่แอนิเมชันที่ถูกลบออกจาก CSS กลับเข้าไป
+  // 3. เพิ่มแอนิเมชันการบานกลับเข้าไปในองค์ประกอบใบไม้ทั้งหมด
   const flowerLeafs = document.querySelectorAll('.flower__leafs');
-  flowerLeafs.forEach(leafs => {
-    // กำหนดแอนิเมชันและ delay ที่หายไปกลับเข้าไป
-    if (leafs.classList.contains('flower__leafs--1')) {
-        leafs.style.animation = 'blooming-flower 2s 1.1s backwards';
-    } else if (leafs.classList.contains('flower__leafs--2')) {
-        leafs.style.animation = 'blooming-flower 2s 1.4s backwards';
-    } else if (leafs.classList.contains('flower__leafs--3')) {
-        leafs.style.animation = 'blooming-flower 2s 1.7s backwards';
-    }
+  flowerLeafs.forEach((leafs, index) => {
+    let delay = 1.1 + (index * 0.3); // กำหนด delay โดยใช้ index เป็นการชดเชยเพื่อให้บานเหลื่อมกัน
+
+    // โค้ดเดิมของแอนิเมชันการบานคือ blooming-flower 2s
+    leafs.style.animation = `blooming-flower 2s ${delay}s backwards`;
   });
 
-  // 4. เริ่มเอฟเฟกต์หัวใจลอย
+  // 4. เริ่มแอนิเมชันของลำต้น/ก้านใบ
+  const flowerLines = document.querySelectorAll('.flower__line');
+  flowerLines.forEach(line => {
+    // กำหนดแอนิเมชัน grow-flower-tree 4s
+    line.style.animation = `grow-flower-tree 4s backwards`; 
+  });
+  
+  // 5. เริ่มเอฟเฟกต์หัวใจลอย
   setupHeartEffect();
   
-  // 5. ลบ Event Listener ออกเพื่อป้องกันการทำงานซ้ำ
+  // 6. ลบ Event Listener ออก
   introMessage.removeEventListener('click', startAnimation);
   introMessage.removeEventListener('touchstart', startAnimation);
 }
 
 
-// --- ฟังก์ชันสำหรับสร้างและจัดการเอฟเฟกต์หัวใจ ---
+// --- ฟังก์ชันสำหรับสร้างและจัดการเอฟเฟกต์หัวใจ (ใช้โค้ดเดิม) ---
 
 function createHeart(x, y) {
   const heart = document.createElement('div');
@@ -82,7 +83,6 @@ function setupHeartEffect() {
   
   const moveHandler = (e) => {
     if (isDragging && Math.random() < 0.25) { 
-      // ใช้ e.touches[0] เพื่อรับตำแหน่งนิ้วแรกที่สัมผัส
       const x = e.clientX || (e.touches[0] ? e.touches[0].clientX : 0);
       const y = e.clientY || (e.touches[0] ? e.touches[0].clientY : 0);
       createHeart(x, y);
