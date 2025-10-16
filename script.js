@@ -1,12 +1,12 @@
 onload = () => {
-  // 1. ซ่อนคลาส not-loaded หลังจาก 1 วินาที (เพื่อให้พื้นหลังและก้านขึ้น)
   const c = setTimeout(() => {
+    // 1. ลบ not-loaded ออกเพื่อให้พื้นหลังและโครงสร้างหลักของดอกไม้ (ก้าน/ใบใหญ่) แสดงผล
     document.body.classList.remove("not-loaded");
     clearTimeout(c);
   }, 1000);
   
-  // 2. ตั้งค่าให้ดอกไม้อยู่ในสถานะหุบรอการคลิก
-  document.body.classList.add('not-bloomed'); 
+  // 2. ตั้งค่าให้ดอกไม้อยู่ในสถานะหุบรอการคลิก (คลาสนี้ถูกเพิ่มใน HTML แล้ว)
+  // document.body.classList.add('not-bloomed'); 
   
   // 3. กำหนด Event Listener สำหรับการคลิกที่ปุ่ม
   const introMessage = document.getElementById('intro-message');
@@ -35,11 +35,13 @@ function startAnimation() {
     leafs.style.animation = `blooming-flower 2s ${delay}s backwards`;
   });
 
-  // 4. เริ่มแอนิเมชันของลำต้น/ก้านใบ
+  // 4. เริ่มแอนิเมชันของลำต้น/ก้านใบ (ถ้ายังไม่ทำงาน)
   const flowerLines = document.querySelectorAll('.flower__line');
   flowerLines.forEach(line => {
     // กำหนดแอนิเมชัน grow-flower-tree 4s
-    line.style.animation = `grow-flower-tree 4s backwards`; 
+    if (!line.style.animationName || line.style.animationName === 'none') {
+        line.style.animation = `grow-flower-tree 4s backwards`; 
+    }
   });
   
   // 5. เริ่มเอฟเฟกต์หัวใจลอย
