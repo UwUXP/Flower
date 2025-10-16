@@ -1,14 +1,8 @@
 onload = () => {
-  const c = setTimeout(() => {
-    // 1. ลบ not-loaded ออกเพื่อให้พื้นหลังและโครงสร้างหลักของดอกไม้ (ก้าน/ใบใหญ่) แสดงผล
-    document.body.classList.remove("not-loaded");
-    clearTimeout(c);
-  }, 1000);
-  
-  // 2. ตั้งค่าให้ดอกไม้อยู่ในสถานะหุบรอการคลิก (คลาสนี้ถูกเพิ่มใน HTML แล้ว)
-  // document.body.classList.add('not-bloomed'); 
-  
-  // 3. กำหนด Event Listener สำหรับการคลิกที่ปุ่ม
+  // ลบคลาส not-loaded ทันทีเมื่อ DOM พร้อม
+  document.body.classList.remove("not-loaded");
+
+  // กำหนด Event Listener สำหรับการคลิกที่ปุ่ม
   const introMessage = document.getElementById('intro-message');
   introMessage.addEventListener('click', startAnimation);
   introMessage.addEventListener('touchstart', startAnimation); 
@@ -29,16 +23,14 @@ function startAnimation() {
   // 3. เพิ่มแอนิเมชันการบานกลับเข้าไปในองค์ประกอบใบไม้ทั้งหมด
   const flowerLeafs = document.querySelectorAll('.flower__leafs');
   flowerLeafs.forEach((leafs, index) => {
-    let delay = 1.1 + (index * 0.3); // กำหนด delay โดยใช้ index เป็นการชดเชยเพื่อให้บานเหลื่อมกัน
-
-    // โค้ดเดิมของแอนิเมชันการบานคือ blooming-flower 2s
+    // ใช้ index เพื่อให้ดอกไม้บานเหลื่อมเวลากัน
+    let delay = 1.1 + (index * 0.3); 
     leafs.style.animation = `blooming-flower 2s ${delay}s backwards`;
   });
 
   // 4. เริ่มแอนิเมชันของลำต้น/ก้านใบ (ถ้ายังไม่ทำงาน)
   const flowerLines = document.querySelectorAll('.flower__line');
   flowerLines.forEach(line => {
-    // กำหนดแอนิเมชัน grow-flower-tree 4s
     if (!line.style.animationName || line.style.animationName === 'none') {
         line.style.animation = `grow-flower-tree 4s backwards`; 
     }
